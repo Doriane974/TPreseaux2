@@ -10,6 +10,20 @@
 #include <string.h>
 /* Port local du serveur */
 #define PORT 9600
+
+struct in_addr {
+u_long s_addr;
+};
+
+struct sockaddr_in {
+u_short sin_family; /* famille d’adresse : AF_INET */
+u_short sin_port; /* numéro de port */
+struct in_addr sin_addr; /* adresse IP */
+char sin_zero[8]; /* inutilisé */
+};
+
+
+
 int main(int argc, char *argv[])
   {
   /*
