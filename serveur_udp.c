@@ -58,12 +58,22 @@ int main(int argc, char *argv[])
   * - le port
   * - Spécifier l’adresse locale du socket du serveur
   */
+  sockfd = socket(PF_INET, SOCK_DGRAM, 0); // ouverture du socket du serveur
+
+  //Remplissage de la structure d'adresse locale du serveur :
+  serverAddr.sin_family = AF_INET;
+  serverAddr.sin_port = htons(9600);
+  serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+  memset(serverAddr.sin_zero, '\0', sizeof serverAddr.sin_zero);
+
 
 
   /*
   * Boucle générale du serveur (infinie)
   */
+  i = 1;
   while (1) {
+    i++;
   /*
   * Code de l’éintrieur de la boucle
   */
