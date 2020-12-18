@@ -11,17 +11,23 @@
 /* Port local du serveur */
 #define PORT 9600
 
+/*typedef int SOCKET;
+typedef struct sockaddr_in SOCKADDR_IN;
+typedef struct sockaddr SOCKADDR;
+typedef struct in_addr IN_ADDR;
+*/
+/*
 struct in_addr {
 u_long s_addr;
 };
 
 struct sockaddr_in {
-u_short sin_family; /* famille d’adresse : AF_INET */
-u_short sin_port; /* numéro de port */
-struct in_addr sin_addr; /* adresse IP */
-char sin_zero[8]; /* inutilisé */
+u_short sin_family; /* famille d’adresse : AF_INET *
+u_short sin_port; /* numéro de port *
+struct in_addr sin_addr; /* adresse IP *
+char sin_zero[8]; /* inutilisé *
 };
-
+*/
 
 
 int main(int argc, char *argv[])
@@ -35,6 +41,11 @@ int main(int argc, char *argv[])
   * - structure d’adresse du client
   * - taille de l’adresse du client
   */
+  int sockfd; // le descripteur de socket
+  struct sockaddr_in serverAddr, clientAddr; // strucutre d'adresse locale du serveur et du client
+  char buffer[1024];
+  socklen_t addr_size, client_addr_size; // Taille de l'adresse du client
+  int i;
 
   /*
   * Code du serveur
