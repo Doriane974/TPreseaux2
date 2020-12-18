@@ -8,6 +8,9 @@
 #include <netinet/in.h>
 #include <netdb.h>
 #include <string.h>
+#include <sys/uio.h>
+#include <sys/uio.h>
+
 /* Port local du serveur */
 #define PORT 9600
 
@@ -58,22 +61,33 @@ int main(int argc, char *argv[])
   * - le port
   * - Spécifier l’adresse locale du socket du serveur
   */
-  sockfd = socket(PF_INET, SOCK_DGRAM, 0); // ouverture du socket du serveur
+
+  // ouverture du socket du serveur
+  sockfd = socket(PF_INET, SOCK_DGRAM, 0);
 
   //Remplissage de la structure d'adresse locale du serveur :
   serverAddr.sin_family = AF_INET;
+  serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1"); // inet_adress cause le probleme
   serverAddr.sin_port = htons(9600);
-  serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-  memset(serverAddr.sin_zero, '\0', sizeof serverAddr.sin_zero);
+/*  memset(serverAddr.sin_zero, '\0', sizeof serverAddr.sin_zero); // memset met le premier octet du 3eme argument
+                                                                // le premier argument pointe ; on remplace dans le
+                                                                //3 eme le truc indidu& par le premier dans le 2eme
+                                                                /*1 : pointeur vers bloc de mémoire a remplir.
+                                                                2 : valeur a mettre ds le bloc de mémoire, entier
+                                                                3: nombre d'octet a mettre a la valeut.*/
 
 
+  bind(sockfd, (struct sockaddr *) &serverAddr, sizeof(serverAddr));
 
   /*
   * Boucle générale du serveur (infinie)
   */
-  i = 1;
+
   while (1) {
-    i++;
+
+  recvfrom( sockfd, buffer, 1024, 0, clientAddr, client_addr_size);
+
+
   /*
   * Code de l’éintrieur de la boucle
   */
