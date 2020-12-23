@@ -7,8 +7,10 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 #include <netdb.h>
 #include <string.h>
+
 
 #define SIZE 100
 #define PORT 9600
@@ -32,12 +34,13 @@ int main (int argc, char *argv[])
 * entrée au clavier
 * - taille de la chaîne à envoyer
 */
+  printf("Début\n");
   int sockfd; //le descripteur de socket
   struct sockaddr_in serverAddr; // structure d'addresse du serveur
   struct hostent* hostInfo; // pointeur vers la structure descriptive de la machine
   char buffer[20]; // zone de memoire destinee a acceuillir la chaine
   int size = 20; // taille de la chaine a envoyer
-
+  printf("fin des déclarations\n");
 /*
 * Code du client
 *
@@ -48,26 +51,34 @@ int main (int argc, char *argv[])
 * - Lire une ligne de l’entrée standard
 * - Envoyer la chaîne lue au serveur
 */
-
+  const char *hostname = "serveur";
   sockfd = socket(PF_INET, SOCK_DGRAM, 0); //Ouvrir le socket du client
-  hostInfo = gethostbyname(hostInfo -> h_name); // Récupérer l’adresse IP du serveur à partir de son nom donné en ligne de commande
-
+  printf("socket()\n");
+  hostInfo = gethostbyname(hostname); // Récupérer l’adresse IP du serveur à partir de son nom donné en ligne de commande
+  printf("gethostebyname()\n");
 
   // remplir la structure d'addressse de serveur
-  serverAddr.sin_addr =  *(struct in_addr *)hostInfo->h_addr; /* l'adresse se trouve dans le champ h_addr de la structure hostinfo */
+  printf("%c\n", (*hostInfo).h_name);
+  serverAddr.sin_addr =  *(struct in_addr *)(hostInfo -> h_addr); /* l'adresse se trouve dans le champ h_addr de la structure hostinfo */
+  printf("1\n");
   serverAddr.sin_port = htons(9600);
+  printf("2\n");
   serverAddr.sin_family = AF_INET;
+  printf("3\n");
+
+
+  printf("struct d'addr su serveur\n");
 
   bind(sockfd, (struct sockaddr *) &serverAddr, sizeof(serverAddr)); //au pire on peut l'enlever
-
+  printf("bind()\n");
   //lire une ligne de l'entrée standard
   read(sockfd, buffer, 20);
-
+  printf("read()\n");
   //envloyer la chaine lu au serveur
   sendto(sockfd, buffer, 20, 0, (struct sockaddr *)&serverAddr, hostInfo -> h_length );
-
+  printf("sendto()\n");
   close(sockfd);
-
+  printf("close()\n");
 
 return 0;
 }
