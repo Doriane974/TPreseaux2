@@ -19,6 +19,8 @@
 
 int main (int argc, char *argv[])
 {
+
+
 /*
 * Variables du client
 *
@@ -30,6 +32,22 @@ int main (int argc, char *argv[])
 * entrée au clavier
 * - taille de la chaîne à envoyer
 */
+  int sockfd; //le descripteur de socket
+
+
+
+/*on a la structure descriptive de la machine (hostent)
+struct hostent {
+char *h_name; /* nom officiel de la machine
+char **h_aliases; /* liste des autres noms
+int h_addrtype; /* type d’adresse (AF_INET)
+int h_length; /* longueur de l’adresse
+char **h_addr_list; /* liste des adresses
+};
+
+
+*/
+
 
 /*
 * Code du client
