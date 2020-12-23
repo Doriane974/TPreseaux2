@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
 
   while (1) {
 
-  recvfrom( sockfd, buffer, 1024, 0, clientAddr, client_addr_size);
+  recvfrom( sockfd, buffer, 1024, 0, (struct sockaddr *)&clientAddr, client_addr_size); // des warnings ici
 
 
   /*
