@@ -87,6 +87,7 @@ int main(int argc, char *argv[])
 
   recvfrom( sockfd, buffer, 1024, 0, (struct sockaddr *)&clientAddr, client_addr_size); // des warnings ici
 
+  write(sockfd, buffer,1024 );
 
   /*
   * Code de l’éintrieur de la boucle
