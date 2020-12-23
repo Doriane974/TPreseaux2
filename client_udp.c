@@ -12,7 +12,7 @@
 
 #define SIZE 100
 #define PORT 9600
-
+//#define h_addr h_addr_list[0] /* pour compatibité */
 
 
 
@@ -35,7 +35,7 @@ int main (int argc, char *argv[])
   int sockfd; //le descripteur de socket
   struct sockaddr_in serverAddr; // structure d'addresse du serveur
   struct hostent* hostInfo; // pointeur vers la structure descriptive de la machine
-  char buffer[1024]; // zone de memoire destinee a acceuillir la chaine
+  char buffer[20]; // zone de memoire destinee a acceuillir la chaine
   int size = 20; // taille de la chaine a envoyer
 
 /*
@@ -53,10 +53,25 @@ int main (int argc, char *argv[])
   hostInfo = gethostbyname(hostInfo -> h_name); // Récupérer l’adresse IP du serveur à partir de son nom donné en ligne de commande
 
 
-  serverAddr.sin_addr = hostInfo->h_addr; /* l'adresse se trouve dans le champ h_addr de la structure hostinfo */
+  // remplir la structure d'addressse de serveur
+  serverAddr.sin_addr =  *(struct in_addr *)hostInfo->h_addr; /* l'adresse se trouve dans le champ h_addr de la structure hostinfo */
   serverAddr.sin_port = htons(9600);
   serverAddr.sin_family = AF_INET;
+
+  bind(sockfd, (struct sockaddr *) &serverAddr, sizeof(serverAddr)); //au pire on peut l'enlever
+
+  //lire une ligne de l'entrée standard
+  read(sockfd, buffer, 20);
+
+  //envloyer la chaine lu au serveur
+  sendto(sockfd, buffer, 20, 0, (struct sockaddr *)&serverAddr, hostInfo -> h_length );
+
+  close(sockfd);
 
 
 return 0;
 }
+
+
+
+// Si on a un probleme plus tard, on peut essayer de changer les 20 par des 1024
