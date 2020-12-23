@@ -33,20 +33,9 @@ int main (int argc, char *argv[])
 * - taille de la chaîne à envoyer
 */
   int sockfd; //le descripteur de socket
-
-
-
-/*on a la structure descriptive de la machine (hostent)
-struct hostent {
-char *h_name; /* nom officiel de la machine
-char **h_aliases; /* liste des autres noms
-int h_addrtype; /* type d’adresse (AF_INET)
-int h_length; /* longueur de l’adresse
-char **h_addr_list; /* liste des adresses
-};
-
-
-*/
+  struct sockaddr_in serverAddr; // structure d'addresse du serveur
+  struct hostent* hostInfo; // pointeur vers ka tructure descriptive de la machine
+  char buffer[1024]; // zone de memoire destinee a acceuillir la chaine
 
 
 /*
