@@ -36,7 +36,7 @@ int main (int argc, char *argv[])
   struct sockaddr_in serverAddr; // structure d'addresse du serveur
   struct hostent* hostInfo; // pointeur vers ka tructure descriptive de la machine
   char buffer[1024]; // zone de memoire destinee a acceuillir la chaine
-
+  int size = 20;
 
 /*
 * Code du client
