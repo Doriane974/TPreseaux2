@@ -93,5 +93,7 @@ int main(int argc, char *argv[])
   * Code de l’éintrieur de la boucle
   */
   }
+
+  close(sockfd);
   return 0;
 }
