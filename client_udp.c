@@ -51,15 +51,15 @@ int main (int argc, char *argv[])
 * - Lire une ligne de l’entrée standard
 * - Envoyer la chaîne lue au serveur
 */
-  const char *hostname = "serveur";
+  const char *hostname = "serveur"; // le nom du host n'est pas correct
   sockfd = socket(PF_INET, SOCK_DGRAM, 0); //Ouvrir le socket du client
   printf("socket()\n");
   hostInfo = gethostbyname(hostname); // Récupérer l’adresse IP du serveur à partir de son nom donné en ligne de commande
   printf("gethostebyname()\n");
 
   // remplir la structure d'addressse de serveur
-  printf("%c\n", (*hostInfo).h_name);
-  serverAddr.sin_addr =  *(struct in_addr *)(hostInfo -> h_addr); /* l'adresse se trouve dans le champ h_addr de la structure hostinfo */
+  printf("Value:  %p\n", hostInfo );
+  serverAddr.sin_addr =  *(struct in_addr *)(hostInfo -> h_addr); // hostInfo est le pointeur nul, ca nous fait une segmentation fault.
   printf("1\n");
   serverAddr.sin_port = htons(9600);
   printf("2\n");
