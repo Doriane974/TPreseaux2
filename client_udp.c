@@ -34,9 +34,9 @@ int main (int argc, char *argv[])
 */
   int sockfd; //le descripteur de socket
   struct sockaddr_in serverAddr; // structure d'addresse du serveur
-  struct hostent* hostInfo; // pointeur vers ka tructure descriptive de la machine
+  struct hostent* hostInfo; // pointeur vers la structure descriptive de la machine
   char buffer[1024]; // zone de memoire destinee a acceuillir la chaine
-  int size = 20;
+  int size = 20; // taille de la chaine a envoyer
 
 /*
 * Code du client
@@ -48,5 +48,15 @@ int main (int argc, char *argv[])
 * - Lire une ligne de l’entrée standard
 * - Envoyer la chaîne lue au serveur
 */
+
+  sockfd = socket(PF_INET, SOCK_DGRAM, 0); //Ouvrir le socket du client
+  hostInfo = gethostbyname(hostInfo -> h_name); // Récupérer l’adresse IP du serveur à partir de son nom donné en ligne de commande
+
+
+  serverAddr.sin_addr = hostInfo->h_addr; /* l'adresse se trouve dans le champ h_addr de la structure hostinfo */
+  serverAddr.sin_port = htons(9600);
+  serverAddr.sin_family = AF_INET;
+
+
 return 0;
 }
