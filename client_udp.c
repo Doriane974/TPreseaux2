@@ -62,6 +62,7 @@ int main (int argc, char *argv[])
 
   bind(sockfd, (struct sockaddr *) &serverAddr, sizeof(serverAddr)); //au pire on peut l'enlever
   //lire une ligne de l'entrée standard
+  printf("rentrer une ligne de l'entrée standard ?\n");
   read(sockfd, buffer, 20);
   //envloyer la chaine lu au serveur
   sendto(sockfd, buffer, 20, 0, (struct sockaddr *)&serverAddr, hostInfo -> h_length );
