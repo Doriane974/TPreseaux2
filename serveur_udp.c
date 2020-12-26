@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
   * - taille de l’adresse du client
   */
   int sockfd; // le descripteur de socket
-  struct sockaddr_in serverAddr, clientAddr; // strucutre d'adresse locale du serveur et du client
+  struct sockaddr_in serverAddr, clientAddr; // structure d'adresse locale du serveur et du client
   char buffer[1024];
   socklen_t addr_size, client_addr_size; // Taille de l'adresse du client
   int i;
@@ -86,9 +86,10 @@ int main(int argc, char *argv[])
 
   while (1) {
 
-  recvfrom( sockfd, buffer, 1024, 0, (struct sockaddr *)&clientAddr, client_addr_size); // des warnings ici
+  recvfrom( sockfd, buffer, 1024, 0, (struct sockaddr *)&clientAddr, &client_addr_size); // client addr size cause le probleme
   //int recvfrom(int sockfd, char *buf, int len, int flags, struct sockaddr *from, int *fromlen);
   //int sendto(int sockfd, char *buf, int len, int flags, struct sockaddr *to, int tolen);
+  //sendto(sockfd, buffer, 20, 0, (struct sockaddr *)&serverAddr, hostInfo -> h_length );
   write(sockfd, buffer,1024 );
 
   /*
