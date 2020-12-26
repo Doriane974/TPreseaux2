@@ -67,7 +67,8 @@ int main(int argc, char *argv[])
 
   //Remplissage de la structure d'adresse locale du serveur :
   serverAddr.sin_family = AF_INET;
-  serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1"); // inet_adress cause le probleme
+  serverAddr.sin_addr.s_addr = htonl(INADDR_ANY); // inet_adress cause le probleme
+  //serverAddr.sin_addr =  *(struct in_addr *)(hostInfo -> h_addr);
   serverAddr.sin_port = htons(9600);
 /*  memset(serverAddr.sin_zero, '\0', sizeof serverAddr.sin_zero); // memset met le premier octet du 3eme argument
                                                                 // le premier argument pointe ; on remplace dans le
@@ -86,7 +87,8 @@ int main(int argc, char *argv[])
   while (1) {
 
   recvfrom( sockfd, buffer, 1024, 0, (struct sockaddr *)&clientAddr, client_addr_size); // des warnings ici
-
+  //int recvfrom(int sockfd, char *buf, int len, int flags, struct sockaddr *from, int *fromlen);
+  //int sendto(int sockfd, char *buf, int len, int flags, struct sockaddr *to, int tolen);
   write(sockfd, buffer,1024 );
 
   /*
