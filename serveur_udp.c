@@ -121,6 +121,7 @@ int main(int argc, char *argv[])
   //int sendto(int sockfd, char *buf, int len, int flags, struct sockaddr *to, int tolen);
   //sendto(sockfd, buffer, 20, 0, (struct sockaddr *)&serverAddr, hostInfo -> h_length );
   printf("Vous avez recu :\n");
+  read(sockfd, &buffer, 20);
   afficheMessage(buffer);
   printf("Que voulez vous repondre?\n");
   write(sockfd, buffer,1024 );

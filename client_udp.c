@@ -20,9 +20,9 @@
 void afficheMessage(char buffer[]){
   int i = 0;
   // On enlève le retour chariot
-  printf("Vous avez recu le message :\n");
-  while(buffer[i] != '$'){
-    printf("%c", buffer[i] );;
+  printf("Vous avez envoye le message :\n");
+  while(i<20){
+    printf("%c", buffer[i] );
     i++;
   }
   printf("\n");
@@ -62,6 +62,8 @@ int main (int argc, char *argv[])
   struct hostent* hostInfo; // pointeur vers la structure descriptive de la machine
   char buffer[1024]; // zone de memoire destinee a acceuillir la chaine
   int size = 20; // taille de la chaine a envoyer
+
+
 /*
 * Code du client
 *
@@ -89,14 +91,16 @@ int main (int argc, char *argv[])
 
   //fgets(&buffer, 1024,stdin);
   printf("sockfd = %d\n", sockfd );
-  read(sockfd, &buffer, 20);
+  *buffer = lecture_au_clavier();
   printf("apres read\n");
   //envloyer la chaine lu au serveur
   sendto(sockfd, buffer, 20, 0, (struct sockaddr *)&serverAddr, hostInfo -> h_length );
-  printf(" Vous avez envoye \n" );
+  //printf(" Vous avez envoye \n" );
   afficheMessage(buffer);
-  printf("\n");
+
+  printf("aaaa\n");
   close(sockfd);
+  printf("bbb\n");
 
 return 0;
 }
