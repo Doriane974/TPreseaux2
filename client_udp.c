@@ -14,7 +14,7 @@
 
 #define SIZE 100
 #define PORT 9600
-//#define h_addr h_addr_list[0] /* pour compatibité */
+#define h_addr h_addr_list[0] /* pour compatibité */
 
 
 void afficheMessage(char buffer[]){
@@ -28,8 +28,21 @@ void afficheMessage(char buffer[]){
   printf("\n");
 }
 
+char lecture_au_clavier(){
+  char message[20];
+  char flag = 's';
+  int i = 0;
+  while (flag != '\n'){
+    flag = getchar();
+    message[i] = flag;
+    i++;
+  }
+  return *message;
+}
+
 int main (int argc, char *argv[])
 {
+
 
 
 /*
@@ -73,9 +86,11 @@ int main (int argc, char *argv[])
   //bind(sockfd, (struct sockaddr *) &serverAddr, sizeof(serverAddr)); //au pire on peut l'enlever
   //lire une ligne de l'entrée standard
   printf("Que voulez vous envoyer ?\n");
-  //fgets(&buffer, 1024,stdin);
 
+  //fgets(&buffer, 1024,stdin);
+  printf("sockfd = %d\n", sockfd );
   read(sockfd, &buffer, 20);
+  printf("apres read\n");
   //envloyer la chaine lu au serveur
   sendto(sockfd, buffer, 20, 0, (struct sockaddr *)&serverAddr, hostInfo -> h_length );
   printf(" Vous avez envoye \n" );

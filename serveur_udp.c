@@ -115,12 +115,12 @@ int main(int argc, char *argv[])
   */
 
   while (1) {
-
+  printf("dans la boucle\n");
   recvfrom( sockfd, &buffer, 1024, 0, (struct sockaddr *)&clientAddr, &client_addr_size); // client addr size cause le probleme
   //int recvfrom(int sockfd, char *buf, int len, int flags, struct sockaddr *from, int *fromlen);
   //int sendto(int sockfd, char *buf, int len, int flags, struct sockaddr *to, int tolen);
   //sendto(sockfd, buffer, 20, 0, (struct sockaddr *)&serverAddr, hostInfo -> h_length );
-
+  printf("Vous avez recu :\n");
   afficheMessage(buffer);
   printf("Que voulez vous repondre?\n");
   write(sockfd, buffer,1024 );
