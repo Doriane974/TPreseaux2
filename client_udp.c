@@ -32,11 +32,19 @@ void lecture_au_clavier(char* buffer[]){
   //char message[20];
   char flag = 's';
   int i = 0;
+  char message[20];
+  while(i<20){
+
+  }
   while (flag != '\n'){
     flag = getchar();
-    *buffer[i] = flag;
+    printf(" flag = %c\n", flag);
+    message[i] = flag;
+    printf("buffer[0] = %c\n",*buffer[0] );
     i++;
+    printf(" i = %d\n",i );
   }
+  buffer = message;
 }
 
 int main (int argc, char *argv[])
@@ -59,7 +67,8 @@ int main (int argc, char *argv[])
   int taille;
   struct sockaddr_in serverAddr; // structure d'addresse du serveur
   struct hostent* hostInfo; // pointeur vers la structure descriptive de la machine
-  char buffer[1024]; // zone de memoire destinee a acceuillir la chaine
+  char* buffer[1024]; // zone de memoire destinee a acceuillir la chaine
+
   int size = 20; // taille de la chaine a envoyer
 
 
@@ -90,12 +99,12 @@ int main (int argc, char *argv[])
 
   //fgets(&buffer, 1024,stdin);
   printf("sockfd = %d\n", sockfd );
-  *buffer = lecture_au_clavier();
+  lecture_au_clavier(buffer);
   printf("apres read\n");
   //envloyer la chaine lu au serveur
   sendto(sockfd, buffer, 20, 0, (struct sockaddr *)&serverAddr, hostInfo -> h_length );
   //printf(" Vous avez envoye \n" );
-  afficheMessage(buffer);
+  afficheMessage(*buffer);
 
   printf("aaaa\n");
   close(sockfd);
