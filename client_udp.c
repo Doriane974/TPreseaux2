@@ -28,16 +28,15 @@ void afficheMessage(char buffer[]){
   printf("\n");
 }
 
-char lecture_au_clavier(){
-  char message[20];
+void lecture_au_clavier(char* buffer[]){
+  //char message[20];
   char flag = 's';
   int i = 0;
   while (flag != '\n'){
     flag = getchar();
-    message[i] = flag;
+    *buffer[i] = flag;
     i++;
   }
-  return *message;
 }
 
 int main (int argc, char *argv[])
