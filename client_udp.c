@@ -35,9 +35,10 @@ int main (int argc, char *argv[])
 * - taille de la chaîne à envoyer
 */
   int sockfd; //le descripteur de socket
+  int taille;
   struct sockaddr_in serverAddr; // structure d'addresse du serveur
   struct hostent* hostInfo; // pointeur vers la structure descriptive de la machine
-  char buffer[20]; // zone de memoire destinee a acceuillir la chaine
+  char buffer[1024]; // zone de memoire destinee a acceuillir la chaine
   int size = 20; // taille de la chaine a envoyer
 /*
 * Code du client
@@ -49,7 +50,7 @@ int main (int argc, char *argv[])
 * - Lire une ligne de l’entrée standard
 * - Envoyer la chaîne lue au serveur
 */
-  const char *hostname = "localhost"; // le nom du host n'est pas correct
+  const char *hostname = "localhost"; // le nom du host n'est pas correct - réparé
   sockfd = socket(PF_INET, SOCK_DGRAM, 0); //Ouvrir le socket du client
   hostInfo = gethostbyname(hostname); // Récupérer l’adresse IP du serveur à partir de son nom donné en ligne de commande
 
@@ -60,12 +61,16 @@ int main (int argc, char *argv[])
 
 
 
-  bind(sockfd, (struct sockaddr *) &serverAddr, sizeof(serverAddr)); //au pire on peut l'enlever
+  //bind(sockfd, (struct sockaddr *) &serverAddr, sizeof(serverAddr)); //au pire on peut l'enlever
   //lire une ligne de l'entrée standard
-  printf("rentrer une ligne de l'entrée standard ?\n");
-  read(sockfd, buffer, 20);
+  printf("Que voulez vous envoyer ?\n");
+  fgets(&buffer, 1024,stdin);
+
+  read(sockfd, &buffer, 20);
   //envloyer la chaine lu au serveur
   sendto(sockfd, buffer, 20, 0, (struct sockaddr *)&serverAddr, hostInfo -> h_length );
+  printf(" Vous avez envoye %s\n", buffer );
+  printf("\n");
   close(sockfd);
 
 return 0;

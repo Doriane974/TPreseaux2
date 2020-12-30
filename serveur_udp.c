@@ -11,6 +11,8 @@
 #include <sys/uio.h>
 #include <sys/uio.h>
 
+typedef enum { FALSE, TRUE} bool;
+
 /* Port local du serveur */
 #define PORT 9600
 
@@ -31,6 +33,34 @@ struct in_addr sin_addr; /* adresse IP *
 char sin_zero[8]; /* inutilisé *
 };
 */
+
+bool readclose(char buffer[]){
+
+  if(buffer[0]=='c' || buffer[0]=='C' ){
+    if(buffer[1] == 'l' || buffer[0]=='L'){
+      if(buffer[2] == 'o' || buffer[0]=='O'){
+        if(buffer[3] == 's' || buffer[0]=='S'){
+          if(buffer[4] == 'e' || buffer[0]=='E'){
+            return TRUE;
+          }
+        }
+      }
+    }
+    return FALSE;
+  }
+}
+
+void afficheMessage(char buffer[]){
+  int i = 0;
+  // On enlève le retour chariot
+  printf("Vous avez recu le message :\n");
+  while(buffer[i] != '$'){
+    printf("%c", buffer[i] );;
+    i++;
+  }
+  printf("\n");
+}
+
 
 
 int main(int argc, char *argv[])
@@ -66,7 +96,7 @@ int main(int argc, char *argv[])
   sockfd = socket(PF_INET, SOCK_DGRAM, 0);
 
   //Remplissage de la structure d'adresse locale du serveur :
-  serverAddr.sin_family = AF_INET;
+  serverAddr.sin_family = PF_INET;
   serverAddr.sin_addr.s_addr = htonl(INADDR_ANY); // inet_adress cause le probleme
   //serverAddr.sin_addr =  *(struct in_addr *)(hostInfo -> h_addr);
   serverAddr.sin_port = htons(9600);
@@ -78,7 +108,7 @@ int main(int argc, char *argv[])
                                                                 3: nombre d'octet a mettre a la valeut.*/
 
 
-  bind(sockfd, (struct sockaddr *) &serverAddr, sizeof(serverAddr));
+  //bind(sockfd, (struct sockaddr *) &serverAddr, sizeof(serverAddr));
 
   /*
   * Boucle générale du serveur (infinie)
@@ -86,10 +116,13 @@ int main(int argc, char *argv[])
 
   while (1) {
 
-  recvfrom( sockfd, buffer, 1024, 0, (struct sockaddr *)&clientAddr, &client_addr_size); // client addr size cause le probleme
+  recvfrom( sockfd, &buffer, 1024, 0, (struct sockaddr *)&clientAddr, &client_addr_size); // client addr size cause le probleme
   //int recvfrom(int sockfd, char *buf, int len, int flags, struct sockaddr *from, int *fromlen);
   //int sendto(int sockfd, char *buf, int len, int flags, struct sockaddr *to, int tolen);
   //sendto(sockfd, buffer, 20, 0, (struct sockaddr *)&serverAddr, hostInfo -> h_length );
+
+  afficheMessage(buffer);
+  printf("Que voulez vous repondre?\n");
   write(sockfd, buffer,1024 );
 
   /*
