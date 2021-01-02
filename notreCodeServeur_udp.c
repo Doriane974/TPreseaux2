@@ -1,6 +1,6 @@
 /*
 * Code du serveur
-
+*/
 
 #include <stdio.h>
 #include <unistd.h>
@@ -14,14 +14,14 @@
 
 typedef enum { FALSE, TRUE} bool;
 
-/* Port local du serveur
+//Port local du serveur
 #define PORT 9600
 
-/*typedef int SOCKET;
+typedef int SOCKET;
 typedef struct sockaddr_in SOCKADDR_IN;
 typedef struct sockaddr SOCKADDR;
 typedef struct in_addr IN_ADDR;
-*/
+
 /*
 struct in_addr {
 u_long s_addr;
@@ -62,7 +62,7 @@ void afficheMessage(char buffer[]){
   printf("\n");
 }
 
-
+*/
 
 int main(int argc, char *argv[])
   {
@@ -74,13 +74,15 @@ int main(int argc, char *argv[])
   * - structure d’adresse locale du serveur
   * - structure d’adresse du client
   * - taille de l’adresse du client
-
+*/
   int sockfd; // le descripteur de socket
   struct sockaddr_in serverAddr, clientAddr; // structure d'adresse locale du serveur et du client
+  struct sockaddr_storage serverStorage;
   char buffer[1024];
   socklen_t addr_size, client_addr_size; // Taille de l'adresse du client
   int i;
-  * Code du serveur
+  int nBytes;
+  /* Code du serveur
   *
   * - Ouvrir le socket du serveur
   * - Remplir la structure d’adresse locale du serveur :
@@ -90,7 +92,7 @@ int main(int argc, char *argv[])
   * - le port
   * - Spécifier l’adresse locale du socket du serveur
 
-
+*/
   // ouverture du socket du serveur
   sockfd = socket(PF_INET, SOCK_DGRAM, 0);
 
@@ -104,84 +106,36 @@ int main(int argc, char *argv[])
                                                                 //3 eme le truc indidu& par le premier dans le 2eme
                                                                 /*1 : pointeur vers bloc de mémoire a remplir.
                                                                 2 : valeur a mettre ds le bloc de mémoire, entier
-                                                                3: nombre d'octet a mettre a la valeut.
+                                                                3: nombre d'octet a mettre a la valeut.*/
 
 
   //bind(sockfd, (struct sockaddr *) &serverAddr, sizeof(serverAddr));
 
 
-  * Boucle générale du serveur (infinie)
-  *
+  //* Boucle générale du serveur (infinie)
+  //*
   int j = 0;
   while (i<20) {
   j++;
   printf("dans la boucle\n");
-  recvfrom( sockfd, &buffer, 1024, 0, (struct sockaddr *)&clientAddr, &client_addr_size); // client addr size cause le probleme
+  nBytes = recvfrom( sockfd, &buffer, 1024, 0, (struct sockaddr *)&clientAddr, &client_addr_size); // client addr size cause le probleme
   //int recvfrom(int sockfd, char *buf, int len, int flags, struct sockaddr *from, int *fromlen);
   //int sendto(int sockfd, char *buf, int len, int flags, struct sockaddr *to, int tolen);
   //sendto(sockfd, buffer, 20, 0, (struct sockaddr *)&serverAddr, hostInfo -> h_length );
   printf("Vous avez recu :\n");
+  printf("%d\n", nBytes );
   read(sockfd, &buffer, 20);
-  afficheMessage(buffer);
+  //afficheMessage(buffer);
   printf("Que voulez vous repondre?\n");
-  write(sockfd, buffer,1024 );
-
-  /
+  nBytes = write(sockfd, buffer,1024 );
+  sendto(sockfd,buffer,nBytes,0,(struct sockaddr *)&serverStorage,addr_size);
+  /*int sendto(int sockfd, char *buf, int len, int flags, struct sockaddr *to, int tolen);*/
+  /*
   * Code de l’éintrieur de la boucle
-  *
+  */
   }
 
   close(sockfd);
   return 0;
-}*/
 
-
-
-#include <stdio.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <string.h>
-#include <stdlib.h>
-#include <arpa/inet.h>
-#include <ctype.h>
-
-int main(){
-  int udpSocket, nBytes;
-  char buffer[1024];
-  struct sockaddr_in serverAddr, clientAddr;
-  struct sockaddr_storage serverStorage;
-  socklen_t addr_size, client_addr_size;
-  int i;
-
-  /*Create UDP socket*/
-  udpSocket = socket(PF_INET, SOCK_DGRAM, 0);
-
-  /*Configure settings in address struct*/
-  serverAddr.sin_family = AF_INET;
-  serverAddr.sin_port = htons(7891);
-  serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-  memset(serverAddr.sin_zero, '\0', sizeof serverAddr.sin_zero);
-
-  /*Bind socket with address struct*/
-  bind(udpSocket, (struct sockaddr *) &serverAddr, sizeof(serverAddr));
-
-  /*Initialize size variable to be used later on*/
-  addr_size = sizeof serverStorage;
-
-  while(1){
-    /* Try to receive any incoming UDP datagram. Address and port of
-      requesting client will be stored on serverStorage variable */
-    nBytes = recvfrom(udpSocket,buffer,1024,0,(struct sockaddr *)&serverStorage, &addr_size);
-
-    /*AFFicger dans le serveur le message recu*/
-    /*for(i=0;i<nBytes-1;i++)
-      buffer[i] = toupper(buffer[i]);*/
-
-    printf("Received from client: %s\n",buffer);
-
-    /*Send uppercase message back to client, using serverStorage as the address*/
-    sendto(udpSocket,buffer,nBytes,0,(struct sockaddr *)&serverStorage,addr_size);
-  }
-
-  return 0;
 }
