@@ -7,7 +7,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #define MAX 80
-#define PORT 8080
+#define PORT 9600
 #define SA struct sockaddr
 
 
@@ -44,32 +44,34 @@ void func(int sockfd)
 // Driver function
 int main()
 {
-	int sockfd, connfd, len;
-	struct sockaddr_in servaddr, cli;
+	int sockfd, connection, len;
+	struct sockaddr_in serverAddr, clientAddr;
 
 	// socket create and verification
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
-	if (sockfd == -1) {
+	/*
+  if (sockfd == -1) {
 		printf("socket creation failed...\n");
 		exit(0);
 	}
-	else
-		printf("Socket successfully created..\n");
-	bzero(&servaddr, sizeof(servaddr));
-
+  */
+	//else
+	//	printf("Socket successfully created..\n");
+	memset(&serverAddr, '\0', sizeof(serverAddr)); // avant ici bzero(éserveraddr, sizeog(serveraddr))
+//  memset(serverAddr.sin_zero, '\0', sizeof serverAddr.sin_zero);
 	// assign IP, PORT
-	servaddr.sin_family = AF_INET;
-	servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-	servaddr.sin_port = htons(PORT);
+	serverAddr.sin_family = AF_INET;
+	serverAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+	serverAddr.sin_port = htons(PORT);
 
 	// Binding newly created socket to given IP and verification
-	if ((bind(sockfd, (SA*)&servaddr, sizeof(servaddr))) != 0) {
+	/*if ((bind(sockfd, (SA*)&servaddr, sizeof(servaddr))) != 0) {
 		printf("socket bind failed...\n");
 		exit(0);
 	}
 	else
-		printf("Socket successfully binded..\n");
-
+		printf("Socket successfully binded..\n");*/
+  bind(sockfd, (SA*)&serverAddr, sizeof(serverAddr));
 	// Now server is ready to listen and verification
 	if ((listen(sockfd, 5)) != 0) {
 		printf("Listen failed...\n");
@@ -77,11 +79,11 @@ int main()
 	}
 	else
 		printf("Server listening..\n");
-	len = sizeof(cli);
+	len = sizeof(clientAddr);
 
 	// Accept the data packet from client and verification
-	connfd = accept(sockfd, (SA*)&cli, &len);
-	if (connfd < 0) {
+	connection = accept(sockfd, (SA*)&clientAddr, &len);
+	if (connection < 0) {
 		printf("server acccept failed...\n");
 		exit(0);
 	}
@@ -89,7 +91,7 @@ int main()
 		printf("server acccept the client...\n");
 
 	// Function for chatting between client and server
-	func(connfd);
+	func(connection);
 
 	// After chatting close the socket
 	close(sockfd);
