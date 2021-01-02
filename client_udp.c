@@ -1,6 +1,7 @@
 /*
 * Code du client
 */
+/*
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,7 +18,7 @@
 #define h_addr h_addr_list[0] /* pour compatibité */
 
 
-void afficheMessage(char buffer[]){
+/*void afficheMessage(char buffer[]){
   int i = 0;
   // On enlève le retour chariot
   printf("Vous avez envoye le message :\n");
@@ -26,9 +27,9 @@ void afficheMessage(char buffer[]){
     i++;
   }
   printf("\n");
-}
+}*/
 
-void lecture_au_clavier(char* buffer[]){
+/*void lecture_au_clavier(char* buffer[]){
   //char message[20];
   char flag = 's';
   int i = 0;
@@ -62,7 +63,7 @@ int main (int argc, char *argv[])
 * - zone de mémoire destinée à accueillir la chaîne
 * entrée au clavier
 * - taille de la chaîne à envoyer
-*/
+
   int sockfd; //le descripteur de socket
   int taille;
   struct sockaddr_in serverAddr; // structure d'addresse du serveur
@@ -81,7 +82,7 @@ int main (int argc, char *argv[])
 * - Remplir la structure d’adresse du serveur
 * - Lire une ligne de l’entrée standard
 * - Envoyer la chaîne lue au serveur
-*/
+
   const char *hostname = "localhost"; // le nom du host n'est pas correct - réparé
   sockfd = socket(PF_INET, SOCK_DGRAM, 0); //Ouvrir le socket du client
   hostInfo = gethostbyname(hostname); // Récupérer l’adresse IP du serveur à partir de son nom donné en ligne de commande
@@ -99,12 +100,12 @@ int main (int argc, char *argv[])
 
   //fgets(&buffer, 1024,stdin);
   printf("sockfd = %d\n", sockfd );
-  lecture_au_clavier(buffer);
+  //lecture_au_clavier(buffer);
   printf("apres read\n");
   //envloyer la chaine lu au serveur
   sendto(sockfd, buffer, 20, 0, (struct sockaddr *)&serverAddr, hostInfo -> h_length );
   //printf(" Vous avez envoye \n" );
-  afficheMessage(*buffer);
+  //afficheMessage(*buffer);
 
   printf("aaaa\n");
   close(sockfd);
@@ -113,6 +114,51 @@ int main (int argc, char *argv[])
 return 0;
 }
 
+*/
 
+
+#include <stdio.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <string.h>
+#include <arpa/inet.h>
+
+int main(){
+  int clientSocket, portNum, nBytes;
+  char buffer[1024];
+  struct sockaddr_in serverAddr;
+  socklen_t addr_size;
+
+  /*Create UDP socket*/
+  clientSocket = socket(PF_INET, SOCK_DGRAM, 0);
+
+  /*Configure settings in address struct*/
+  serverAddr.sin_family = AF_INET;
+  serverAddr.sin_port = htons(7891);
+  serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+  memset(serverAddr.sin_zero, '\0', sizeof serverAddr.sin_zero);
+
+  /*Initialize size variable to be used later on*/
+  addr_size = sizeof serverAddr;
+
+  while(1){
+    printf("Type a sentence to send to server:\n");
+    fgets(buffer,1024,stdin);
+    printf("You typed: %s",buffer);
+
+    nBytes = strlen(buffer) + 1;
+
+    /*Send message to server*/
+    sendto(clientSocket,buffer,nBytes,0,(struct sockaddr *)&serverAddr,addr_size);
+
+    /*Receive message from server*/
+                nBytes = recvfrom(clientSocket,buffer,1024,0,NULL, NULL);
+
+    printf("Received from server: %s\n",buffer);
+
+  }
+
+  return 0;
+}
 
 // Si on a un probleme plus tard, on peut essayer de changer les 20 par des 1024

@@ -24,7 +24,7 @@ typedef struct in_addr IN_ADDR;
 
 int main(int argc, char *argv[])
 {
-
+  char buffer[20];
   SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);
   /*if(sock == INVALID_SOCKET)
   {
@@ -55,13 +55,14 @@ int main(int argc, char *argv[])
   }*/
 
 
-  SOCKADDR_IN csin = { 0 };
-  SOCKET csock;
+  SOCKADDR_IN csin = { 0 }; // structure d'adresse du client
+  SOCKET csock; //Le socket du client
 
-  int sinsize = sizeof csin;
+  int sinsize = sizeof csin; // la taille de l'adresse du client
 
   csock = accept(sock, (SOCKADDR *)&csin, &sinsize);
-
+  printf("Vous avez recu un message\n");
+  read(sock, &buffer, 20);
   /*if(csock == INVALID_SOCKET)
   {
       perror("accept()");
