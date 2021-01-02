@@ -164,12 +164,15 @@ int main(){
 
   addr_size = sizeof serverStorage;
 
-  int j = 0;
-  while(j<20){
+  while(;;){
     j++;
     nBytes = recvfrom(sockfd,buffer,1024,0,(struct sockaddr *)&serverStorage, &addr_size);
-
+    if ((strncmp(buffer, "exit", 4)) == 0) {
+			printf("Client Exit...\n");
+			break;
+		}
     printf("Received from client: %s\n",buffer);
+
 
   }
 

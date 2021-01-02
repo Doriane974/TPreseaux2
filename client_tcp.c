@@ -5,24 +5,26 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <arpa/inet.h>
-#define MAX 80
+#define MAX 20
 #define PORT 9600
 #define SA struct sockaddr
 
-void func(int sockfd)
+void chat(int sockfd)
 {
 	char buffer[MAX];
 	int n;
 	for (;;) {
-		bzero(buffer, sizeof(buffer));
-		printf("Enter the string : ");
+		//bzero(buffer, sizeof(buffer));
+    memset(&buffer, '\0', MAX);
+		printf("Entrer le message a envoyer : ");
 		n = 0;
 		while ((buffer[n++] = getchar()) != '\n')
 			;
 		write(sockfd, buffer, sizeof(buffer));
-		bzero(buffer, sizeof(buffer));
+		//bzero(buffer, sizeof(buffer));
+    memset(&buffer, '\0', MAX);
 		read(sockfd, buffer, sizeof(buffer));
-		printf("From Server : %s", buffer);
+		printf("You received : %s", buffer);
 		if ((strncmp(buffer, "exit", 4)) == 0) {
 			printf("Client Exit...\n");
 			break;
@@ -43,7 +45,8 @@ int main()
 	}
 	else
 		printf("Socket successfully created..\n");
-	bzero(&serverAddr, sizeof(serverAddr));
+	//bzero(&serverAddr, sizeof(serverAddr));
+  memset(&serverAddr, '\0', sizeof(serverAddr));
 
 	// assign IP, PORT
 	serverAddr.sin_family = AF_INET;
@@ -59,7 +62,7 @@ int main()
 		printf("connected to the server..\n");
 
 	// function for chat
-	func(sockfd);
+  chat(sockfd);
 
 	// close the socket
 	close(sockfd);

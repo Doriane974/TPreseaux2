@@ -6,25 +6,27 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
-#define MAX 80
+#define MAX 20
 #define PORT 9600
 #define SA struct sockaddr
 
 
 // Function designed for chat between client and server.
-void func(int sockfd)
+void fils(int sockfd)
 {
 	char buffer[MAX];
 	int n;
-	// infinite loop for chat
+
 	for (;;) {
-		bzero(buffer, MAX);
+		//bzero(buffer, MAX);
+    memset(&buffer, '\0', MAX);
 
 		// read the message from client and copy it in buffer
 		read(sockfd, buffer, sizeof(buffer));
 		// print buffer which contains the client contents
 		printf("From client: %s\t To client : ", buffer);
-		bzero(buffer, MAX);
+		//bzero(buffer, MAX);
+    memset(&buffer, '\0', MAX);
 		n = 0;
 		// copy server message in the buffer
 		while ((buffer[n++] = getchar()) != '\n')
@@ -91,7 +93,7 @@ int main()
 		printf("server acccept the client...\n");
 
 	// Function for chatting between client and server
-	func(connection);
+	fils(connection);
 
 	// After chatting close the socket
 	close(sockfd);
