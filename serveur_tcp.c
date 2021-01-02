@@ -11,8 +11,7 @@
 #define SA struct sockaddr
 
 
-void fils(int sockfd)
-{
+void fils(int sockfd){
 	char buffer[MAX];
 	int n;
 
@@ -21,11 +20,8 @@ void fils(int sockfd)
 		read(sockfd, buffer, sizeof(buffer));
 		printf("From client: %s\t To client : ", buffer);
     memset(&buffer, '\0', MAX);
-		n = 0;
-		while ((getchar() != '\n') || (n<20) ){
-      buffer[n] = getchar();
-      n++;
-    }
+    n = 0;
+    while ((buffer[n++] = getchar()) != '\n') ;
 		write(sockfd, buffer, sizeof(buffer));
 		if (strncmp("exit", buffer, 4) == 0) {
 			printf("Server Exit...\n");
@@ -34,9 +30,7 @@ void fils(int sockfd)
 	}
 }
 
-// Driver function
-int main()
-{
+int main(){
 	int sockfd, connection, len;
 	struct sockaddr_in serverAddr, clientAddr;
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -67,7 +61,6 @@ int main()
 		printf("Server listening..\n");
 	len = sizeof(clientAddr);
 
-	// Accept the data packet from client and verification
 	connection = accept(sockfd, (SA*)&clientAddr, &len);
 	if (connection < 0) {
 		printf("server acccept failed...\n");
@@ -76,9 +69,7 @@ int main()
 	else
 		printf("server acccept the client...\n");
 
-	// Function for chatting between client and server
 	fils(connection);
-
-	// After chatting close the socket
 	close(sockfd);
+  return 0;
 }

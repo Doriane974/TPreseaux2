@@ -9,21 +9,17 @@
 #define PORT 9600
 #define SA struct sockaddr
 
-void chat(int sockfd)
-{
+void chat(int sockfd){
 	char buffer[MAX];
 	int n;
 	for (;;) {
-		//bzero(buffer, sizeof(buffer));
     memset(&buffer, '\0', MAX);
 		printf("Entrer le message a envoyer : ");
 		n = 0;
-    while ((getchar() != '\n') || (n<20) ){
-      buffer[n] = getchar();
-      n++;
-    }
+    buffer[1]='a';
+    n = 0;
+    while ((buffer[n++] = getchar()) != '\n') ;
 		write(sockfd, buffer, sizeof(buffer));
-		//bzero(buffer, sizeof(buffer));
     memset(&buffer, '\0', MAX);
 		read(sockfd, buffer, sizeof(buffer));
 		printf("You received : %s", buffer);
@@ -34,12 +30,10 @@ void chat(int sockfd)
 	}
 }
 
-int main()
-{
+int main(){
 	int sockfd, connection;
 	struct sockaddr_in serverAddr, clientAddr;
 
-	// socket create and varification
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockfd == -1) {
 		printf("socket creation failed...\n");
@@ -47,15 +41,12 @@ int main()
 	}
 	else
 		printf("Socket successfully created..\n");
-	//bzero(&serverAddr, sizeof(serverAddr));
   memset(&serverAddr, '\0', sizeof(serverAddr));
 
-	// assign IP, PORT
 	serverAddr.sin_family = AF_INET;
 	serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
 	serverAddr.sin_port = htons(PORT);
 
-	// connect the client socket to server socket
 	if (connect(sockfd, (SA*)&serverAddr, sizeof(serverAddr)) != 0) {
 		printf("connection with the server failed...\n");
 		exit(0);
@@ -63,9 +54,8 @@ int main()
 	else
 		printf("connected to the server..\n");
 
-	// function for chat
   chat(sockfd);
-
-	// close the socket
 	close(sockfd);
+
+  return 0;
 }
