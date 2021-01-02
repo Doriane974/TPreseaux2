@@ -1,105 +1,65 @@
-/*
-* Code du serveur
-*/
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
 #include <netdb.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-
-#define INVALID_SOCKET -1
-#define SOCKET_ERROR -1
-#define closesocket(s) close(s)
-typedef int SOCKET;
-typedef struct sockaddr_in SOCKADDR_IN;
-typedef struct sockaddr SOCKADDR;
-typedef struct in_addr IN_ADDR;
-
-
-//#error not defined for this platform
-
-//#endif
-/* Port local du serveur */
-#define PORT 9600
-int main(int argc, char *argv[])
+#include <sys/socket.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#define MAX 80
+#define PORT 8080
+#define SA struct sockaddr
+void func(int sockfd)
 {
+	char buffer[MAX];
+	int n;
+	for (;;) {
+		bzero(buffer, sizeof(buffer));
+		printf("Enter the string : ");
+		n = 0;
+		while ((buffer[n++] = getchar()) != '\n')
+			;
+		write(sockfd, buffer, sizeof(buffer));
+		bzero(buffer, sizeof(buffer));
+		read(sockfd, buffer, sizeof(buffer));
+		printf("From Server : %s", buffer);
+		if ((strncmp(buffer, "exit", 4)) == 0) {
+			printf("Client Exit...\n");
+			break;
+		}
+	}
+}
 
-  SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);
-  /*if(sock == INVALID_SOCKET)
-  {
-      perror("socket()");
-      exit(errno);
-  }
-  */
-  struct hostent *hostinfo = NULL;
-  SOCKADDR_IN sin = { 0 }; /* initialise la structure avec des 0 */
-  const char *hostname = "localhost";
+int main()
+{
+	int sockfd, connfd;
+	struct sockaddr_in servaddr, cli;
 
-  hostinfo = gethostbyname(hostname); /* on récupère les informations de l'hôte auquel on veut se connecter */
-  /*if (hostinfo == NULL) /* l'hôte n'existe pas
-  {
-      fprintf (stderr, "Unknown host %s.\n", hostname);
-      exit(EXIT_FAILURE);
-  }*/
+	// socket create and varification
+	sockfd = socket(AF_INET, SOCK_STREAM, 0);
+	if (sockfd == -1) {
+		printf("socket creation failed...\n");
+		exit(0);
+	}
+	else
+		printf("Socket successfully created..\n");
+	bzero(&servaddr, sizeof(servaddr));
 
-  sin.sin_addr = *(IN_ADDR *) hostinfo->h_addr; /* l'adresse se trouve dans le champ h_addr de la structure hostinfo */
-  sin.sin_port = htons(PORT); /* on utilise htons pour le port */
-  sin.sin_family = AF_INET;
+	// assign IP, PORT
+	servaddr.sin_family = AF_INET;
+	servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+	servaddr.sin_port = htons(PORT);
 
-  //if(
-  connect(sock,(SOCKADDR *) &sin, sizeof(SOCKADDR));// == SOCKET_ERROR)
-/*  {
-      perror("connect()");
-      exit(errno);
-  }*/
+	// connect the client socket to server socket
+	if (connect(sockfd, (SA*)&servaddr, sizeof(servaddr)) != 0) {
+		printf("connection with the server failed...\n");
+		exit(0);
+	}
+	else
+		printf("connected to the server..\n");
 
-  char buffer[1024];
-  //if(
-  send(sock, buffer, strlen(buffer), 0);// < 0)
-  /*{
-      perror("send()");
-      exit(errno);
-  }*/
+	// function for chat
+	func(sockfd);
 
-  int n = 0;
-
-  //if((
-  n = recv(sock, buffer, sizeof buffer - 1, 0);//) < 0)
-  /*{
-      perror("recv()");
-      exit(errno);
-  }*/
-
-  buffer[n] = '\0';
-
-  closesocket(sock);
-  /*
-  * Variables du serveur
-  *
-  * Déclarer ici les variables suivantes :
-  * - sockfd le descripteur de socket
-  * - structure d’adresse locale du serveur
-  * - structure d’adresse du client
-  * - taille de l’adresse du client
-  */
-  /*
-  * Code du serveur
-  *
-  * - Ouvrir le socket du serveur
-  * - Remplir la structure d’adresse locale du serveur :
-  * - la famille d’adresse
-  * - l’adresse IP
-  * - le port
-  * - Spécifier l’adresse locale du socket du serveur
-  */
-  /*
-  * Boucle générale du serveur (infinie)
-  */
-  //while (1) {
-    /*
-    * Code de l’interieur de la boucle
-    *///}
-  return 0;
+	// close the socket
+	close(sockfd);
 }
