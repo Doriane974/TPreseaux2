@@ -18,8 +18,10 @@ void chat(int sockfd)
     memset(&buffer, '\0', MAX);
 		printf("Entrer le message a envoyer : ");
 		n = 0;
-		while ((buffer[n++] = getchar()) != '\n')
-			;
+    while ((getchar() != '\n') || (n<20) ){
+      buffer[n] = getchar();
+      n++;
+    }
 		write(sockfd, buffer, sizeof(buffer));
 		//bzero(buffer, sizeof(buffer));
     memset(&buffer, '\0', MAX);

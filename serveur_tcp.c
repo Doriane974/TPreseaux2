@@ -11,31 +11,22 @@
 #define SA struct sockaddr
 
 
-// Function designed for chat between client and server.
 void fils(int sockfd)
 {
 	char buffer[MAX];
 	int n;
 
 	for (;;) {
-		//bzero(buffer, MAX);
     memset(&buffer, '\0', MAX);
-
-		// read the message from client and copy it in buffer
 		read(sockfd, buffer, sizeof(buffer));
-		// print buffer which contains the client contents
 		printf("From client: %s\t To client : ", buffer);
-		//bzero(buffer, MAX);
     memset(&buffer, '\0', MAX);
 		n = 0;
-		// copy server message in the buffer
-		while ((buffer[n++] = getchar()) != '\n')
-			;
-
-		// and send that buffer to client
+		while ((getchar() != '\n') || (n<20) ){
+      buffer[n] = getchar();
+      n++;
+    }
 		write(sockfd, buffer, sizeof(buffer));
-
-		// if msg contains "Exit" then server exit and chat ended.
 		if (strncmp("exit", buffer, 4) == 0) {
 			printf("Server Exit...\n");
 			break;
@@ -48,31 +39,24 @@ int main()
 {
 	int sockfd, connection, len;
 	struct sockaddr_in serverAddr, clientAddr;
-
-	// socket create and verification
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
-	/*
+
   if (sockfd == -1) {
 		printf("socket creation failed...\n");
 		exit(0);
-	}
-  */
-	//else
-	//	printf("Socket successfully created..\n");
-	memset(&serverAddr, '\0', sizeof(serverAddr)); // avant ici bzero(éserveraddr, sizeog(serveraddr))
-//  memset(serverAddr.sin_zero, '\0', sizeof serverAddr.sin_zero);
-	// assign IP, PORT
+  }
+	else
+		printf("Socket successfully created..\n");
+	memset(&serverAddr, '\0', sizeof(serverAddr));
 	serverAddr.sin_family = AF_INET;
 	serverAddr.sin_addr.s_addr = htonl(INADDR_ANY);
 	serverAddr.sin_port = htons(PORT);
-
-	// Binding newly created socket to given IP and verification
-	/*if ((bind(sockfd, (SA*)&servaddr, sizeof(servaddr))) != 0) {
+  if ((bind(sockfd, (SA*)&serverAddr, sizeof(serverAddr))) != 0) {
 		printf("socket bind failed...\n");
 		exit(0);
 	}
 	else
-		printf("Socket successfully binded..\n");*/
+		printf("Socket successfully binded..\n");
   bind(sockfd, (SA*)&serverAddr, sizeof(serverAddr));
 	// Now server is ready to listen and verification
 	if ((listen(sockfd, 5)) != 0) {
