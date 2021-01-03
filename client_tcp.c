@@ -13,18 +13,18 @@ void chat(int sockfd){
 	char buffer[MAX];
 	int n;
 	for (;;) {
-    memset(&buffer, '\0', MAX);
+    		memset(&buffer, '\0', MAX);
 		printf("Entrer le message a envoyer : ");
 		n = 0;
-    buffer[1]='a';
-    n = 0;
-    while ((buffer[n++] = getchar()) != '\n') ;
+    		buffer[1]='a';
+    		n = 0;
+    		while ((buffer[n++] = getchar()) != '\n') ;
 		write(sockfd, buffer, sizeof(buffer));
-    memset(&buffer, '\0', MAX);
+    		memset(&buffer, '\0', MAX);
 		read(sockfd, buffer, sizeof(buffer));
-		printf("You received : %s", buffer);
+		printf("Message reçu : %s", buffer);
 		if ((strncmp(buffer, "exit", 4)) == 0) {
-			printf("Client Exit...\n");
+			printf("Fermeture de client...\n");
 			break;
 		}
 	}
@@ -36,25 +36,25 @@ int main(){
 
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockfd == -1) {
-		printf("socket creation failed...\n");
+		printf("La creation du socket a echoue...\n");
 		exit(0);
 	}
 	else
-		printf("Socket successfully created..\n");
-  memset(&serverAddr, '\0', sizeof(serverAddr));
+		printf("Le socket a ete cree avec succes..\n");
+  	memset(&serverAddr, '\0', sizeof(serverAddr));
 
 	serverAddr.sin_family = AF_INET;
 	serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
 	serverAddr.sin_port = htons(PORT);
 
 	if (connect(sockfd, (SA*)&serverAddr, sizeof(serverAddr)) != 0) {
-		printf("connection with the server failed...\n");
+		printf("La connection avec le serveur a echoue...\n");
 		exit(0);
 	}
 	else
-		printf("connected to the server..\n");
+		printf("Connecte au serveur..\n");
 
-  chat(sockfd);
+  	chat(sockfd);
 	close(sockfd);
 
   return 0;
