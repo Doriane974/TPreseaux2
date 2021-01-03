@@ -22,7 +22,7 @@ void chat(int sockfd){
 		write(sockfd, buffer, sizeof(buffer));
     		memset(&buffer, '\0', MAX);
 		read(sockfd, buffer, sizeof(buffer));
-		printf("Message reçu : %s", buffer);
+		printf("Message recu : %s", buffer);
 		if ((strncmp(buffer, "exit", 4)) == 0) {
 			printf("Fermeture de client...\n");
 			break;
