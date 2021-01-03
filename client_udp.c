@@ -25,7 +25,7 @@ int main(){
 	for(;;){
 		printf("Taper le message a envoyer au serveur :\n");
 		fgets(buffer,MAX+1,stdin);
-		printf("Vous avez taper : %s \n",buffer);
+		printf("Vous avez tape : %s \n",buffer);
 
 		nBytes = strlen(buffer) + 1;
 
