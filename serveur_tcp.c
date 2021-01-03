@@ -16,15 +16,15 @@ void fils(int sockfd){
 	int n;
 
 	for (;;) {
-    memset(&buffer, '\0', MAX);
+    	memset(&buffer, '\0', MAX);
 		read(sockfd, buffer, sizeof(buffer));
-		printf("From client: %s\t To client : ", buffer);
-    memset(&buffer, '\0', MAX);
-    n = 0;
-    while ((buffer[n++] = getchar()) != '\n') ;
+		printf("Du client : %s\t Au client : ", buffer);
+    	memset(&buffer, '\0', MAX);
+    	n = 0;
+    	while ((buffer[n++] = getchar()) != '\n') ;
 		write(sockfd, buffer, sizeof(buffer));
 		if (strncmp("exit", buffer, 4) == 0) {
-			printf("Server Exit...\n");
+			printf("Fermeture du serveur...\n");
 			break;
 		}
 	}
@@ -35,39 +35,38 @@ int main(){
 	struct sockaddr_in serverAddr, clientAddr;
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
-  if (sockfd == -1) {
-		printf("socket creation failed...\n");
+  	if (sockfd == -1) {
+		printf("Echec de la creation du socket...\n");
 		exit(0);
-  }
+  	}
 	else
-		printf("Socket successfully created..\n");
+		printf("Succes de la creation du socket..\n");
 	memset(&serverAddr, '\0', sizeof(serverAddr));
 	serverAddr.sin_family = AF_INET;
 	serverAddr.sin_addr.s_addr = htonl(INADDR_ANY);
 	serverAddr.sin_port = htons(PORT);
-  if ((bind(sockfd, (SA*)&serverAddr, sizeof(serverAddr))) != 0) {
-		printf("socket bind failed...\n");
+  	if ((bind(sockfd, (SA*)&serverAddr, sizeof(serverAddr))) != 0) {
+		printf("Echec du bind du socket...\n");
 		exit(0);
 	}
 	else
-		printf("Socket successfully binded..\n");
-  bind(sockfd, (SA*)&serverAddr, sizeof(serverAddr));
-	// Now server is ready to listen and verification
+		printf("Succes du bind du socket..\n");
+  	bind(sockfd, (SA*)&serverAddr, sizeof(serverAddr));
 	if ((listen(sockfd, 5)) != 0) {
-		printf("Listen failed...\n");
+		printf("Listen a echoue...\n");
 		exit(0);
 	}
 	else
-		printf("Server listening..\n");
+		printf("Le serveur est en listen..\n");
 	len = sizeof(clientAddr);
 
 	connection = accept(sockfd, (SA*)&clientAddr, &len);
 	if (connection < 0) {
-		printf("server acccept failed...\n");
+		printf("Le serveur n'a pas accept le client...\n");
 		exit(0);
 	}
 	else
-		printf("server acccept the client...\n");
+		printf("Le serveur acccept le client...\n");
 
 	fils(connection);
 	close(sockfd);
